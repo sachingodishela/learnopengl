@@ -2,20 +2,28 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
-const GLchar* vertexShaderSource = ""
+const GLchar* vertexShaderSource =
 "#version 430 core\n"
 "layout(location = 0) in vec3 aPos;\n"
 "void main()\n"
 "{\n"
-"	gl_Position = vec4(aPos.x-0.25f, aPos.y, aPos.z, 1.0f);\n"
+"	gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0f);\n"
 "}\0";
 
-const GLchar* fragmentShaderSource = ""
+const GLchar* fragmentShaderSource =
 "#version 430 core\n"
 "out vec4 FragColor;"
 "void main()\n"
 "{\n"
 "	FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+"}\0";
+
+const GLchar* fragmentShaderSource2 =
+"#version 430 core\n"
+"out vec4 FragColor;"
+"void main()\n"
+"{\n"
+"	FragColor = vec4(1.0f, 1.0f, 0, 1.0f);\n"
 "}\0";
 
 void framebufferSizeCallback(GLFWwindow* window, int width, int height) {
@@ -26,11 +34,20 @@ void processInput(GLFWwindow* window) {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 		glfwSetWindowShouldClose(window, true);
 	}
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	}
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+}
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+	std::cout << "key=" << key << ", action=" << action << std::endl;
+	if (action == GLFW_RELEASE and key == GLFW_KEY_W) {
+		GLint mode[2], newMode;
+		glGetIntegerv(GL_POLYGON_MODE, mode);
+		if (mode[0] == GL_LINE) {
+			newMode = GL_FILL;
+		}
+		else {
+			newMode = GL_LINE;
+		}
+		glPolygonMode(GL_FRONT_AND_BACK, newMode);
 	}
 }
 
@@ -53,26 +70,6 @@ int main()
 	glViewport(0, 0, 800, 600);
 	glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
 
-	float vertices[] = { -0.5f, -0.4f, 0, 0.5f, -0.4f, 0, 0, 0.6f, 0, 1.0f, 0.6f, 0 };
-	unsigned int indices[] = { 0, 1, 2, 1, 2, 3 };
-
-	// First create VAO, which contains everything vertex related. (VBO, EBO, data etc.)
-	GLuint array;
-	glGenVertexArrays(1, &array);
-	glBindVertexArray(array);
-
-	// VBO: To bring data from CPU to GPU
-	GLuint buffer;
-	glGenBuffers(1, &buffer);
-	glBindBuffer(GL_ARRAY_BUFFER, buffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	// EBO:  To use the data in VBO multiple times by providing indices
-	GLuint elementBuffer;
-	glGenBuffers(1, &elementBuffer);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
 	// vertex shader
 	GLuint vertexShaderObject = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertexShaderObject, 1, &vertexShaderSource, NULL);
@@ -92,28 +89,76 @@ int main()
 	GLsizei fragmentShaderInfoLogLength;
 	glGetShaderInfoLog(fragmentShaderObject, 512, &fragmentShaderInfoLogLength, fragmentShaderInfoLog);
 	std::cout << (fragmentShaderInfoLogLength ? fragmentShaderInfoLog : "DONE!") << std::endl;
-	
-	// shader program
-	GLuint shaderProgram = glCreateProgram();
-	glAttachShader(shaderProgram, vertexShaderObject);
-	glAttachShader(shaderProgram, fragmentShaderObject);
-	glLinkProgram(shaderProgram);
 
-	// To interpret data in the vertex array
+	// fragment shader 2
+	GLuint fragmentShaderObject2 = glCreateShader(GL_FRAGMENT_SHADER);
+	glShaderSource(fragmentShaderObject2, 1, &fragmentShaderSource2, NULL);
+	glCompileShader(fragmentShaderObject2);
+	std::cout << "Compiling Fragment Shader 2: ";
+	char fragmentShaderInfoLog2[512];
+	GLsizei fragmentShaderInfoLogLength2;
+	glGetShaderInfoLog(fragmentShaderObject2, 512, &fragmentShaderInfoLogLength2, fragmentShaderInfoLog2);
+	std::cout << (fragmentShaderInfoLogLength2 ? fragmentShaderInfoLog2 : "DONE!") << std::endl;
+
+	// shader program
+	GLuint *shaderProgram = new GLuint[2];
+	shaderProgram[0] = glCreateProgram();
+	glAttachShader(shaderProgram[0], vertexShaderObject);
+	glAttachShader(shaderProgram[0], fragmentShaderObject);
+	glLinkProgram(shaderProgram[0]);
+
+	// shader program 2
+	shaderProgram[1] = glCreateProgram();
+	glAttachShader(shaderProgram[1], vertexShaderObject);
+	glAttachShader(shaderProgram[1], fragmentShaderObject2);
+	glLinkProgram(shaderProgram[1]);
+
+	float vertices[] = { -0.5f, 0, 0, 0.5f, 0, 0, 0, 0.6f, 0 };
+	float vertices2[] = { -0.5f, 0, 0, 0.5f, 0, 0, 0, -0.6f, 0 };
+
+	// First create 2 VAOs, which contain everything vertex related. (VBO, EBO, data etc.)
+	GLuint* VAO = new GLuint[2];
+	glGenVertexArrays(2, VAO);
+
+	// VBO: To bring data from CPU to GPU, create 2 VBOs
+	GLuint* VBO = new GLuint[2];
+	glGenBuffers(2, VBO);
+
+	// Configure 1st VAO and VBO
+	glBindVertexArray(VAO[0]);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 12, (void*)0);
-	glEnableVertexAttribArray(0);
-	glUseProgram(shaderProgram);
+
+	// Configure 2nd VAO and VBO
+	glBindVertexArray(VAO[1]);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO[1]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices2), vertices2, GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 12, (void*)0);
 
 	// Pre Draw Commands
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+	glfwSetKeyCallback(window, key_callback);
 
+	// The render loop
 	while (!glfwWindowShouldClose(window)) {
 		processInput(window);
 		glClear(GL_COLOR_BUFFER_BIT);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		for (int i = 0; i < 2; i++) {
+			glBindVertexArray(VAO[i]);
+			glUseProgram(shaderProgram[i]);
+			glEnableVertexAttribArray(0);
+			glDrawArrays(GL_TRIANGLES, 0, 3);
+		}
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
+
+	// de-allocate resources
+	glDeleteVertexArrays(2, VAO);
+	glDeleteBuffers(2, VBO);
+	glDeleteProgram(shaderProgram[0]);
 	glfwTerminate();
+
 	return 0;
-}	
+}
