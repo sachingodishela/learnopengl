@@ -26,6 +26,12 @@ void processInput(GLFWwindow* window) {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 		glfwSetWindowShouldClose(window, true);
 	}
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	}
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
 }
 
 int main()
@@ -98,7 +104,9 @@ int main()
 	glEnableVertexAttribArray(0);
 	glUseProgram(shaderProgram);
 
-	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);	
+	// Pre Draw Commands
+	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+
 	while (!glfwWindowShouldClose(window)) {
 		processInput(window);
 		glClear(GL_COLOR_BUFFER_BIT);
