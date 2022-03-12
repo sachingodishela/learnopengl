@@ -2,7 +2,7 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 
-const GLchar* vertexShaderSource = ""
+const GLchar* vertexShaderSource =
 "#version 430 core\n"
 "layout(location = 0) in vec3 aPos;\n"
 "void main()\n"
@@ -10,7 +10,7 @@ const GLchar* vertexShaderSource = ""
 "	gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0f);\n"
 "}\0";
 
-const GLchar* fragmentShaderSource = ""
+const GLchar* fragmentShaderSource =
 "#version 430 core\n"
 "out vec4 FragColor;"
 "void main()\n"
@@ -26,11 +26,20 @@ void processInput(GLFWwindow* window) {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 		glfwSetWindowShouldClose(window, true);
 	}
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	}
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+}
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+	std::cout << "key=" << key << ", action=" << action << std::endl;
+	if (action == GLFW_RELEASE and key == GLFW_KEY_W) {
+		GLint mode[2], newMode;
+		glGetIntegerv(GL_POLYGON_MODE, mode);
+		if (mode[0] == GL_LINE) {
+			newMode = GL_FILL;
+		}
+		else {
+			newMode = GL_LINE;
+		}
+		glPolygonMode(GL_FRONT_AND_BACK, newMode);
 	}
 }
 
@@ -105,6 +114,7 @@ int main()
 	// Pre Draw Commands
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glUseProgram(shaderProgram);
+	glfwSetKeyCallback(window, key_callback);
 
 	// The render loop
 	while (!glfwWindowShouldClose(window)) {
@@ -126,4 +136,4 @@ int main()
 	glfwTerminate();
 
 	return 0;
-}	
+}
