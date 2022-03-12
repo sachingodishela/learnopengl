@@ -47,29 +47,25 @@ int main()
 	glViewport(0, 0, 800, 600);
 	glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
 
-	/** NEW SINCE LAST LESSON
-		Read vertex data from CPU to GPU
-		What are openGL objects, types of openGL objects
-		Generating objects and object names
-		Binding those objects to targets
-		copying data to those target objects
-		create a vertex shader object
-		attach source to the vertex shader object
-		compile the shader
-	*/
-	float vertices[] = {-0.5f, -0.4f, 0,   0.5f, -0.4f, 0,      0, 0.6f, 0,
-						0,      0.6f, 0,   0.5f, -0.4f, 0,   1.0f, 0.6f, 0};
+	float vertices[] = { -0.5f, -0.4f, 0, 0.5f, -0.4f, 0, 0, 0.6f, 0, 1.0f, 0.6f, 0 };
+	unsigned int indices[] = { 0, 1, 2, 1, 2, 3 };
 
-	// VAO
+	// First create VAO, which contains everything vertex related. (VBO, EBO, data etc.)
 	GLuint array;
 	glGenVertexArrays(1, &array);
 	glBindVertexArray(array);
 
-	// VBO
+	// VBO: To bring data from CPU to GPU
 	GLuint buffer;
 	glGenBuffers(1, &buffer);
 	glBindBuffer(GL_ARRAY_BUFFER, buffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	// EBO:  To use the data in VBO multiple times by providing indices
+	GLuint elementBuffer;
+	glGenBuffers(1, &elementBuffer);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elementBuffer);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
 	// vertex shader
 	GLuint vertexShaderObject = glCreateShader(GL_VERTEX_SHADER);
@@ -97,14 +93,8 @@ int main()
 	glAttachShader(shaderProgram, fragmentShaderObject);
 	glLinkProgram(shaderProgram);
 
-
+	// To interpret data in the vertex array
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 12, (void*)0);
-	// attribute index as defined in vertex shader, i.e. layout (location = 0)
-	// no. of components in current attribute
-	// type of data
-	// do we require normalization?
-	// stride between consecutive same attributes
-	// offset of current attribute from the beginning of data
 	glEnableVertexAttribArray(0);
 	glUseProgram(shaderProgram);
 
@@ -112,7 +102,7 @@ int main()
 	while (!glfwWindowShouldClose(window)) {
 		processInput(window);
 		glClear(GL_COLOR_BUFFER_BIT);
-		glDrawArrays(GL_TRIANGLES, 0, 6);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
