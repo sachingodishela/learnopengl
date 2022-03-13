@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32228.430
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Getting Started", "Getting Started\Getting Started.vcxproj", "{96EA9034-2161-4229-A8ED-2AF0F57B9D74}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Hello Triangle", "Getting Started\Getting Started.vcxproj", "{96EA9034-2161-4229-A8ED-2AF0F57B9D74}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assignments", "Assignments", "{B14B5607-BA00-4DD6-A2E5-68B3A9749443}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Exercises", "Exercises", "{B14B5607-BA00-4DD6-A2E5-68B3A9749443}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Getting Started", "Getting Started", "{FE50FBF1-D7EC-44F1-8111-DA3EDCBA319E}"
 EndProject
@@ -17,7 +17,19 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "2. Use Different VAO and VB
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "3. Different Fragment Shader", "3. Different Fragment Shader\3. Different Fragment Shader.vcxproj", "{A7884BE5-6357-41FA-9F0E-48EBEE9D94EE}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GettingStarted", "GettingStarted", "{B24B4FFF-94F7-4386-BB51-41F84308D9F7}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Hello Window", "Hello Window\Hello Window.vcxproj", "{0452903D-04E3-492C-B8AC-39D0883773D6}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Shaders", "Shaders\Shaders.vcxproj", "{B1815387-11CC-40AD-A54E-816D9DAEC2F8}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Shader", "Shader\Shader.vcxitems", "{7F3D9DD4-DF17-4BB1-B06E-662D1A294321}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Shader\Shader.vcxitems*{7f3d9dd4-df17-4bb1-b06e-662d1a294321}*SharedItemsImports = 9
+		Shader\Shader.vcxitems*{b1815387-11cc-40ad-a54e-816d9daec2f8}*SharedItemsImports = 4
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
@@ -57,16 +69,35 @@ Global
 		{A7884BE5-6357-41FA-9F0E-48EBEE9D94EE}.Release|x64.Build.0 = Release|x64
 		{A7884BE5-6357-41FA-9F0E-48EBEE9D94EE}.Release|x86.ActiveCfg = Release|Win32
 		{A7884BE5-6357-41FA-9F0E-48EBEE9D94EE}.Release|x86.Build.0 = Release|Win32
+		{0452903D-04E3-492C-B8AC-39D0883773D6}.Debug|x64.ActiveCfg = Debug|x64
+		{0452903D-04E3-492C-B8AC-39D0883773D6}.Debug|x64.Build.0 = Debug|x64
+		{0452903D-04E3-492C-B8AC-39D0883773D6}.Debug|x86.ActiveCfg = Debug|Win32
+		{0452903D-04E3-492C-B8AC-39D0883773D6}.Debug|x86.Build.0 = Debug|Win32
+		{0452903D-04E3-492C-B8AC-39D0883773D6}.Release|x64.ActiveCfg = Release|x64
+		{0452903D-04E3-492C-B8AC-39D0883773D6}.Release|x64.Build.0 = Release|x64
+		{0452903D-04E3-492C-B8AC-39D0883773D6}.Release|x86.ActiveCfg = Release|Win32
+		{0452903D-04E3-492C-B8AC-39D0883773D6}.Release|x86.Build.0 = Release|Win32
+		{B1815387-11CC-40AD-A54E-816D9DAEC2F8}.Debug|x64.ActiveCfg = Debug|x64
+		{B1815387-11CC-40AD-A54E-816D9DAEC2F8}.Debug|x64.Build.0 = Debug|x64
+		{B1815387-11CC-40AD-A54E-816D9DAEC2F8}.Debug|x86.ActiveCfg = Debug|Win32
+		{B1815387-11CC-40AD-A54E-816D9DAEC2F8}.Debug|x86.Build.0 = Debug|Win32
+		{B1815387-11CC-40AD-A54E-816D9DAEC2F8}.Release|x64.ActiveCfg = Release|x64
+		{B1815387-11CC-40AD-A54E-816D9DAEC2F8}.Release|x64.Build.0 = Release|x64
+		{B1815387-11CC-40AD-A54E-816D9DAEC2F8}.Release|x86.ActiveCfg = Release|Win32
+		{B1815387-11CC-40AD-A54E-816D9DAEC2F8}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{96EA9034-2161-4229-A8ED-2AF0F57B9D74} = {B24B4FFF-94F7-4386-BB51-41F84308D9F7}
 		{FE50FBF1-D7EC-44F1-8111-DA3EDCBA319E} = {B14B5607-BA00-4DD6-A2E5-68B3A9749443}
 		{E4EDB5EE-74EC-4289-9A50-D12E95ACF7B7} = {FE50FBF1-D7EC-44F1-8111-DA3EDCBA319E}
 		{6ED661AB-5B29-410A-9994-35DB004055B3} = {E4EDB5EE-74EC-4289-9A50-D12E95ACF7B7}
 		{79A2466B-81EF-4569-B93E-20D5AD9D33F6} = {E4EDB5EE-74EC-4289-9A50-D12E95ACF7B7}
 		{A7884BE5-6357-41FA-9F0E-48EBEE9D94EE} = {E4EDB5EE-74EC-4289-9A50-D12E95ACF7B7}
+		{0452903D-04E3-492C-B8AC-39D0883773D6} = {B24B4FFF-94F7-4386-BB51-41F84308D9F7}
+		{B1815387-11CC-40AD-A54E-816D9DAEC2F8} = {B24B4FFF-94F7-4386-BB51-41F84308D9F7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AA28CDC4-2EB0-4E0B-A34C-86EA0483B296}
