@@ -54,25 +54,18 @@ int main()
 	float vertices[] = { -0.5f, 0, 0, 1.0f, 0, 0, 0.5f, 0, 0, 0, 1.0f, 0, 0, 0.6f, 0, 1.0f, 1.0f, 0 };
 	float vertices2[] = { -0.5f, 0, 0, 1.0f, 0, 0, 0.5f, 0, 0, 0, 1.0f, 0, 0, -0.6f, 0, 1.0f, 1.0f, 0 };
 
-	// First create 2 VAOs, which contain everything vertex related. (VBO, EBO, data etc.)
-	GLuint* VAO = new GLuint[2];
-	glGenVertexArrays(2, VAO);
+	// First create 1 VAO, which contain everything vertex related. (VBO, EBO, data etc.)
+	GLuint* VAO = new GLuint[1];
+	glGenVertexArrays(1, VAO);
 
 	// VBO: To bring data from CPU to GPU, create 2 VBOs
-	GLuint* VBO = new GLuint[2];
-	glGenBuffers(2, VBO);
+	GLuint* VBO = new GLuint[1];
+	glGenBuffers(1, VBO);
 
-	// Configure 1st VAO and VBO
+	// Configure VAO and VBO
 	glBindVertexArray(VAO[0]);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 24, (void*)0);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 24, (void*)12);
-
-	// Configure 2nd VAO and VBO
-	glBindVertexArray(VAO[1]);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO[1]);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices2), vertices2, GL_DYNAMIC_DRAW);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 24, (void*)0);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 24, (void*)12);
 
@@ -88,10 +81,11 @@ int main()
 	while (!glfwWindowShouldClose(window)) {
 		processInput(window);
 		glClear(GL_COLOR_BUFFER_BIT);
-		for (int i = 0; i < 2; i++) {
+		for (int i = 0; i < 1; i++) {
 			glBindVertexArray(VAO[i]);
 			glEnableVertexAttribArray(0);
 			glEnableVertexAttribArray(1);
+			shader.setFloat("yMultiplier", 1.3f);
 			glDrawArrays(GL_TRIANGLES, 0, 3);
 		}
 		glfwSwapBuffers(window);

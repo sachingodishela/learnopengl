@@ -92,6 +92,7 @@ int main()
 			glBindVertexArray(VAO[i]);
 			glEnableVertexAttribArray(0);
 			glEnableVertexAttribArray(1);
+			shader.setFloat("xOffset", 0.2f);
 			glDrawArrays(GL_TRIANGLES, 0, 3);
 		}
 		glfwSwapBuffers(window);

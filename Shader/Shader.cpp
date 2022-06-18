@@ -1,7 +1,5 @@
 #include "Shader.h"
-#include <string>
-#include <iostream>
-#include <fstream>
+
 
 void Shader::use() {
 	glUseProgram(this->id);
@@ -41,4 +39,16 @@ Shader::Shader(const char* vertexShaderFilePath, const char* fragmentShaderFileP
 	glAttachShader(shaderProgram, vertexShaderObject);
 	glAttachShader(shaderProgram, fragmentShaderObject);
 	glLinkProgram(shaderProgram);
+}
+
+void Shader::setBool(const std::string& uniform, bool value) const {
+	glUniform1i(glGetUniformLocation(this->id, uniform.c_str()), (int)value);
+}
+
+void Shader::setInt(const std::string& uniform, int value) const {
+	glUniform1i(glGetUniformLocation(this->id, uniform.c_str()), value);
+}
+
+void Shader::setFloat(const std::string& uniform, float value) const {
+	glUniform1f(glGetUniformLocation(this->id, uniform.c_str()), value);
 }
